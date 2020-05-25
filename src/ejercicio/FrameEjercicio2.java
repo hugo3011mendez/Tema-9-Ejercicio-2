@@ -53,11 +53,24 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
 
             @Override
             public void keyTyped(KeyEvent e) {
-                System.err.println(e.getKeyChar());
                 for (int i = 0; i < teclasTelefono.size(); i++) {
                     if(Character.toString(e.getKeyChar()).equals(teclasTelefono.get(i).getText())){ // Comparo la tecla pulsada con los botones del teléfono
                         teclasTelefono.get(i).setBackground(Color.GRAY); // Si coincide, cambio el color de fondo del botón
                     }
+
+                }
+
+                try { //Creo un try-catch por si la tecla pulsada no es un número, para que no me de error y de paso lo aviso por consola
+                    if(Integer.parseInt(Character.toString(e.getKeyChar())) >= 0 && Integer.parseInt(Character.toString(e.getKeyChar())) <=9){
+                        if(txfNumerosPulsados.getText().equals("")){ // Si el TextField está vacío, no pongo una coma al principio
+                            txfNumerosPulsados.setText(Character.toString(e.getKeyChar()));
+                        }
+                        else{
+                            txfNumerosPulsados.setText(txfNumerosPulsados.getText() + "," + Character.toString(e.getKeyChar()));
+                        }
+                    }              
+                } catch (Exception e1) {
+                    System.err.println("La tecla pulsada no es un número");
                 }
             } 
 
@@ -97,13 +110,14 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
         btnReset.setLocation(100, 250);
         btnReset.setSize(btnReset.getPreferredSize());
         btnReset.addActionListener(this);
+        btnReset.addKeyListener(kh);
         add(btnReset);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnReset){
-            //TODO Limpiar el TextField
+        if(e.getSource() == btnReset){ // Acciones a realizar cuando se pulsa el botón reset
+            txfNumerosPulsados.setText("");
 
             for (int i = 0; i < teclasTelefono.size(); i++) {
                 teclasTelefono.get(i).setBackground(null);
