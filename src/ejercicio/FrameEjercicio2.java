@@ -172,6 +172,30 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                 teclasTelefono.get(i).setBackground(null);
             }
         }
+        else if(e.getSource() == mnuGrabar){ // Acciones a realizar al pulsar la opción de menú "Grabar"
+            // Elijo la carpeta personal del usuario para crear el nuevo archivo
+            File archivoNumeros = new File(System.getProperty("user.home") + System.getProperty("file.separator") +  "T9Ejercicio2.txt");
+
+            if(!archivoNumeros.exists()){ // Acciones a realizar si el archivo no existe
+                try (PrintWriter f = new PrintWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt")){ // Creo el archivo en un try-with-resources
+                } catch (Exception e1) {
+                    System.err.println("Error al crear el archivo de números");
+                }
+                
+                try (PrintWriter escribirNumeros = new PrintWriter(new FileWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt", true))){
+                    escribirNumeros.printf("%s", txfNumerosPulsados.getText().split(",")[txfNumerosPulsados.getText().split(",").length-1]);
+                } catch (IOException e2) {
+                    System.err.println("Error de acceso al archivo de números");
+                }    
+            }
+            else{ // Acciones a realizar si el archivo ya existe, y por lo tanto ya contiene números guardados
+                try (PrintWriter escribirNumeros = new PrintWriter(new FileWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt", true))){
+                    escribirNumeros.printf("," + txfNumerosPulsados.getText().split(",")[txfNumerosPulsados.getText().split(",").length-1]);
+                } catch (IOException e2) {
+                    System.err.println("Error de acceso al archivo de números");
+                }
+            }
+        }
         else if(e.getSource() == mnuAcercaDe){ // Acciones a realizar al pulsar la opción de menú "Acerca De"
             JOptionPane.showMessageDialog(null, "Este programa ha sido creado por el alumno Hugo Méndez González",
             "Acerca del programa", JOptionPane.INFORMATION_MESSAGE);
