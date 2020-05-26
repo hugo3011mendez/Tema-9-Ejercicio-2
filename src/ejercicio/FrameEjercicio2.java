@@ -159,7 +159,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
 
         // Creo el botón de resetear
         btnReset = new JButton("Reset");
-        btnReset.setLocation(100, 250);
+        btnReset.setLocation(140, 225);
         btnReset.setSize(btnReset.getPreferredSize());
         btnReset.addActionListener(this);
         btnReset.addKeyListener(kh);
@@ -218,7 +218,6 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                                 formatoIncorrecto = true;
                             }
                         }
-                        //FIXME Arreglar el bug cuando meto una letra
                         if(!formatoIncorrecto){ // Si no se han encontrado problemas y el formato de separación por comas es correcto
                             for (int i = 0; i < texto.length(); i+=2) { // Compruebo que lo que haya guardado sean números
                                 try {

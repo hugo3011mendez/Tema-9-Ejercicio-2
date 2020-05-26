@@ -8,7 +8,7 @@ public class Ejercicio2 {
 
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 500);
+        frame.setSize(400, 350);
         frame.setVisible(true);
     }
 }
