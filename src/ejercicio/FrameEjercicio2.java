@@ -23,6 +23,9 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
     String[] botones = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "#", "0", "*"}; // Creo un array con el texto que debe contener cada botón
     ArrayList<JButton> teclasTelefono = new ArrayList<>(); // Creo una colección para guardar los JButton creados para el teléfono
 
+    // Elijo la carpeta personal del usuario para crear el nuevo archivo
+    File archivoNumeros = new File(System.getProperty("user.home") + System.getProperty("file.separator") +  "T9Ejercicio2.txt");
+
     public FrameEjercicio2() {
         super("Tema 9 Ejercicio 2");
         setLayout(null);
@@ -173,8 +176,6 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
             }
         }
         else if(e.getSource() == mnuGrabar){ // Acciones a realizar al pulsar la opción de menú "Grabar"
-            // Elijo la carpeta personal del usuario para crear el nuevo archivo
-            File archivoNumeros = new File(System.getProperty("user.home") + System.getProperty("file.separator") +  "T9Ejercicio2.txt");
 
             if(!archivoNumeros.exists()){ // Acciones a realizar si el archivo no existe
                 try (PrintWriter f = new PrintWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt")){ // Creo el archivo en un try-with-resources
@@ -194,6 +195,68 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                 } catch (IOException e2) {
                     System.err.println("Error de acceso al archivo de números");
                 }
+            }
+        }
+        else if(e.getSource() == mnuLeer){ // Acciones a realizar al pulsar la opción de menú "Leer"
+
+            if(!archivoNumeros.exists()){ // Si el archivo no existe se lanza un JOptionPane con un mensaje de error
+                JOptionPane.showMessageDialog(null, "Error! El archivo de números no existe!",
+                "Error al leer del archivo", JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                String texto = ""; // Creo variable de texto para el texto de la línea del archivo
+                boolean formatoIncorrecto = false; // Creo booleana para controlar si el formato es correcto
+                ArrayList<String> numerosEnElArchivo = new ArrayList<>();
+
+                try (Scanner mostrarArchivo = new Scanner(archivoNumeros)) {  // Hago un try-with-resources para leer el archivo
+                    while (mostrarArchivo.hasNext()) {
+                        texto = mostrarArchivo.nextLine();
+
+                        // Valido si la línea tiene el patrón correspondiente
+                        for (int i = 1; i < texto.length(); i+=2) {
+                            if(texto.charAt(i) != ','){
+                                formatoIncorrecto = true;
+                            }
+                        }
+                        //FIXME Arreglar el bug cuando meto una letra
+                        if(!formatoIncorrecto){ // Si no se han encontrado problemas y el formato de separación por comas es correcto
+                            for (int i = 0; i < texto.length(); i+=2) { // Compruebo que lo que haya guardado sean números
+                                try {
+                                    if(Integer.valueOf(String.valueOf(texto.charAt(i))) >= 0 && Integer.valueOf(String.valueOf(texto.charAt(i))) <= 9){
+                                        numerosEnElArchivo.add(String.valueOf(texto.charAt(i)));
+                                    }
+                                } catch (Exception e4) {
+                                    formatoIncorrecto = true;
+                                    JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números!",
+                                    "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        }
+                        else{ // Si el formato del archivo es incorrecto, muestro un JOptionPane informando del error
+                            JOptionPane.showMessageDialog(null, "Error! El formato del archivo de números es incorrecto!",
+                            "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+
+                    if(!formatoIncorrecto){ // Ya fuera del bucle, si el formato es correcto muestro los números guardados en el JFrame
+                        String mostrarNumerosEnElArchivo = "";
+                        for (int i = 0; i < numerosEnElArchivo.size(); i++) {
+                            if(i == 0){
+                                mostrarNumerosEnElArchivo += numerosEnElArchivo.get(i);
+                            }
+                            else{
+                                mostrarNumerosEnElArchivo += "," + numerosEnElArchivo.get(i);
+                            }
+                        }
+
+                        JOptionPane.showMessageDialog(null, "Los números que hay en el archivo son : " + mostrarNumerosEnElArchivo,
+                        "Leer archivo", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+                catch (IOException e3) {
+                    System.err.println("Error de acceso al archivo de números");
+                }
+        
             }
         }
         else if(e.getSource() == mnuAcercaDe){ // Acciones a realizar al pulsar la opción de menú "Acerca De"
