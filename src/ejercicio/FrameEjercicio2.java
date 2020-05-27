@@ -153,6 +153,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
             btnTelefono.setSize(btnTelefono.getPreferredSize());
             btnTelefono.setLocation(x, y);
             btnTelefono.addMouseListener(mh); // Añado el MouseHandler a todos los botones
+            btnTelefono.addKeyListener(kh);
             btnTelefono.addActionListener(new ActionListener(){ // Defino aquí las acciones a realizar cuando se pulse cualquier botón del teléfono
                 public void actionPerformed(ActionEvent e){
                     if(txfNumerosPulsados.getText().equals("")){ // Si el TextField está vacío, no pongo una coma al principio
@@ -198,24 +199,20 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
         else if(e.getSource() == mnuGrabar){ // Acciones a realizar al pulsar la opción de menú "Grabar"
 
             if(!archivoNumeros.exists()){ // Acciones a realizar si el archivo no existe
-                try (PrintWriter f = new PrintWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt")){ // Creo el archivo en un try-with-resources
+                // Si el archivo no existe, lo creo en un try-with-resources
+                try (PrintWriter f = new PrintWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt")){ 
                 } catch (Exception e1) {
                     System.err.println("Error al crear el archivo de números");
                 }
-                
-                try (PrintWriter escribirNumeros = new PrintWriter(new FileWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt", true))){
-                    escribirNumeros.printf("%s", txfNumerosPulsados.getText().split(",")[txfNumerosPulsados.getText().split(",").length-1]);
-                } catch (IOException e2) {
-                    System.err.println("Error de acceso al archivo de números");
-                }    
             }
-            else{ // Acciones a realizar si el archivo ya existe, y por lo tanto ya contiene números guardados
-                try (PrintWriter escribirNumeros = new PrintWriter(new FileWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt", true))){
-                    escribirNumeros.printf("," + txfNumerosPulsados.getText().split(",")[txfNumerosPulsados.getText().split(",").length-1]);
-                } catch (IOException e2) {
-                    System.err.println("Error de acceso al archivo de números");
+
+            try (PrintWriter escribirNumeros = new PrintWriter(new FileWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt", true))){
+                for (int i = 0; i < txfNumerosPulsados.getText().split(",").length; i++) {
+                    escribirNumeros.printf("%s,", txfNumerosPulsados.getText().split(",")[i]);
                 }
-            }
+            } catch (IOException e2) {
+                System.err.println("Error de acceso al archivo de números");
+            }    
         }
         else if(e.getSource() == mnuLeer){ // Acciones a realizar al pulsar la opción de menú "Leer"
 
