@@ -66,7 +66,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
 
                 }
 
-                try { //Creo un try-catch por si la tecla pulsada no es un número, para que no me de error y de paso lo aviso por consola
+                try { //Creo un try-catch por si salta error al verificar que la tecla pulsada es o no un número, y verifico si se ha pulsado almohadilla o asterisco
                     if(Integer.parseInt(Character.toString(e.getKeyChar())) >= 0 && Integer.parseInt(Character.toString(e.getKeyChar())) <=9){
                         if(txfNumerosPulsados.getText().equals("")){ // Si el TextField está vacío, no pongo una coma al principio
                             txfNumerosPulsados.setText(Character.toString(e.getKeyChar()));
@@ -76,7 +76,17 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                         }
                     }              
                 } catch (Exception e1) {
-                    System.err.println("La tecla pulsada no es un número");
+                    if(e.getKeyChar() == '#' || e.getKeyChar() == '*'){
+                        if(txfNumerosPulsados.getText().equals("")){ // Si el TextField está vacío, no pongo una coma al principio
+                            txfNumerosPulsados.setText(Character.toString(e.getKeyChar()));
+                        }
+                        else{
+                            txfNumerosPulsados.setText(txfNumerosPulsados.getText() + "," + Character.toString(e.getKeyChar()));
+                        }
+                    }
+                    else{
+                        System.err.println("La tecla que has pulsado no se encuentra entre los botones del teléfono");
+                    }
                 }
             } 
 
@@ -143,6 +153,16 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
             btnTelefono.setSize(btnTelefono.getPreferredSize());
             btnTelefono.setLocation(x, y);
             btnTelefono.addMouseListener(mh); // Añado el MouseHandler a todos los botones
+            btnTelefono.addActionListener(new ActionListener(){ // Defino aquí las acciones a realizar cuando se pulse cualquier botón del teléfono
+                public void actionPerformed(ActionEvent e){
+                    if(txfNumerosPulsados.getText().equals("")){ // Si el TextField está vacío, no pongo una coma al principio
+                        txfNumerosPulsados.setText(((JButton) e.getSource()).getText());
+                    }
+                    else{
+                        txfNumerosPulsados.setText(txfNumerosPulsados.getText() + "," + ((JButton) e.getSource()).getText());
+                    }
+                }
+            });
             add(btnTelefono);
             x += 45; // Cada vez que añado un nuevo botón, aumento la coordenada X
 
