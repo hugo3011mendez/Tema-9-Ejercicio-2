@@ -72,7 +72,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                             txfNumerosPulsados.setText(Character.toString(e.getKeyChar()));
                         }
                         else{
-                            txfNumerosPulsados.setText(txfNumerosPulsados.getText() + "," + Character.toString(e.getKeyChar()));
+                            txfNumerosPulsados.setText(txfNumerosPulsados.getText() + Character.toString(e.getKeyChar()));
                         }
                     }              
                 } catch (Exception e1) {
@@ -81,7 +81,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                             txfNumerosPulsados.setText(Character.toString(e.getKeyChar()));
                         }
                         else{
-                            txfNumerosPulsados.setText(txfNumerosPulsados.getText() + "," + Character.toString(e.getKeyChar()));
+                            txfNumerosPulsados.setText(txfNumerosPulsados.getText() + Character.toString(e.getKeyChar()));
                         }
                     }
                     else{
@@ -160,7 +160,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                         txfNumerosPulsados.setText(((JButton) e.getSource()).getText());
                     }
                     else{
-                        txfNumerosPulsados.setText(txfNumerosPulsados.getText() + "," + ((JButton) e.getSource()).getText());
+                        txfNumerosPulsados.setText(txfNumerosPulsados.getText() + ((JButton) e.getSource()).getText());
                     }
                 }
             });
@@ -207,12 +207,12 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
             }
 
             try (PrintWriter escribirNumeros = new PrintWriter(new FileWriter(System.getProperty("user.home") + System.getProperty("file.separator") + "T9Ejercicio2.txt", true))){
-                for (int i = 0; i < txfNumerosPulsados.getText().split(",").length; i++) {
-                    escribirNumeros.printf("%s,", txfNumerosPulsados.getText().split(",")[i]);
-                }
+                escribirNumeros.println(txfNumerosPulsados.getText());
             } catch (IOException e2) {
                 System.err.println("Error de acceso al archivo de números");
-            }    
+            }
+            
+            txfNumerosPulsados.setText(""); // Al acabar de guardar el número, vacío el texto dentro del TextField
         }
         else if(e.getSource() == mnuLeer){ // Acciones a realizar al pulsar la opción de menú "Leer"
 
@@ -229,48 +229,38 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                     while (mostrarArchivo.hasNext()) {
                         texto = mostrarArchivo.nextLine();
 
-                        // Valido si la línea tiene el patrón correspondiente
-                        for (int i = 1; i < texto.length(); i+=2) {
-                            if(texto.charAt(i) != ','){
-                                formatoIncorrecto = true;
-                            }
-                        }
-                        if(!formatoIncorrecto){ // Si no se han encontrado problemas y el formato de separación por comas es correcto
-                            for (int i = 0; i < texto.length(); i+=2) { // Compruebo que lo que haya guardado sean números, # o *
-                                try {
-                                    if(Integer.valueOf(String.valueOf(texto.charAt(i))) >= 0 && Integer.valueOf(String.valueOf(texto.charAt(i))) <= 9){
-                                        numerosEnElArchivo.add(String.valueOf(texto.charAt(i)));
-                                    }
-                                } catch (Exception e4) {
-                                    if(texto.charAt(i) == '#' || texto.charAt(i) == '*'){
-                                        numerosEnElArchivo.add(String.valueOf(texto.charAt(i)));
-                                    }
-                                    else{
-                                        formatoIncorrecto = true;
-                                        JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números, almohadillas o asteriscos!",
-                                        "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
-                                    }
+                        for (int i = 0; i < texto.length(); i++) { // Compruebo que lo que haya guardado sean números, # o *
+                            try {
+                                if(Integer.valueOf(String.valueOf(texto.charAt(i))) >= 0 && Integer.valueOf(String.valueOf(texto.charAt(i))) <= 9){
+                                    formatoIncorrecto = false;
+                                }
+                            } catch (Exception e4) {
+                                if(texto.charAt(i) != '#' && texto.charAt(i) != '*'){
+                                    formatoIncorrecto = true;
+                                    JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números, almohadillas o asteriscos!",
+                                    "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
                                 }
                             }
                         }
-                        else{ // Si el formato del archivo es incorrecto, muestro un JOptionPane informando del error
-                            JOptionPane.showMessageDialog(null, "Error! El formato del archivo de números es incorrecto!",
-                            "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
+
+                        if(!formatoIncorrecto){ // Si el formato está bien, añado el número a la colección
+                            numerosEnElArchivo.add(texto);
                         }
                     }
 
-                    if(!formatoIncorrecto){ // Ya fuera del bucle, si el formato es correcto muestro los números guardados en el JFrame
+                    if(!formatoIncorrecto){ // Si el formato es correcto muestro los números guardados en el JFrame
                         String mostrarNumerosEnElArchivo = "";
                         for (int i = 0; i < numerosEnElArchivo.size(); i++) {
                             if(i == 0){
                                 mostrarNumerosEnElArchivo += numerosEnElArchivo.get(i);
                             }
                             else{
-                                mostrarNumerosEnElArchivo += "," + numerosEnElArchivo.get(i);
+                                mostrarNumerosEnElArchivo += ", " + numerosEnElArchivo.get(i);
                             }
                         }
 
-                        JOptionPane.showMessageDialog(null, "Los caracteres que hay en el archivo son : " + mostrarNumerosEnElArchivo,
+                        // Muestro todos los números de teléfono que hay en el archivo
+                        JOptionPane.showMessageDialog(null, "Los números que hay en el archivo son : " + mostrarNumerosEnElArchivo,
                         "Leer archivo", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
