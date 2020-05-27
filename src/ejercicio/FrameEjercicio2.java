@@ -236,15 +236,20 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                             }
                         }
                         if(!formatoIncorrecto){ // Si no se han encontrado problemas y el formato de separación por comas es correcto
-                            for (int i = 0; i < texto.length(); i+=2) { // Compruebo que lo que haya guardado sean números
+                            for (int i = 0; i < texto.length(); i+=2) { // Compruebo que lo que haya guardado sean números, # o *
                                 try {
                                     if(Integer.valueOf(String.valueOf(texto.charAt(i))) >= 0 && Integer.valueOf(String.valueOf(texto.charAt(i))) <= 9){
                                         numerosEnElArchivo.add(String.valueOf(texto.charAt(i)));
                                     }
                                 } catch (Exception e4) {
-                                    formatoIncorrecto = true;
-                                    JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números!",
-                                    "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
+                                    if(texto.charAt(i) == '#' || texto.charAt(i) == '*'){
+                                        numerosEnElArchivo.add(String.valueOf(texto.charAt(i)));
+                                    }
+                                    else{
+                                        formatoIncorrecto = true;
+                                        JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números, almohadillas o asteriscos!",
+                                        "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
+                                    }
                                 }
                             }
                         }
@@ -265,7 +270,7 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                             }
                         }
 
-                        JOptionPane.showMessageDialog(null, "Los números que hay en el archivo son : " + mostrarNumerosEnElArchivo,
+                        JOptionPane.showMessageDialog(null, "Los caracteres que hay en el archivo son : " + mostrarNumerosEnElArchivo,
                         "Leer archivo", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
