@@ -231,14 +231,12 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
 
                         for (int i = 0; i < texto.length(); i++) { // Compruebo que lo que haya guardado sean números, # o *
                             try {
-                                if(Integer.valueOf(String.valueOf(texto.charAt(i))) >= 0 && Integer.valueOf(String.valueOf(texto.charAt(i))) <= 9){
-                                    formatoIncorrecto = false;
+                                if(Integer.valueOf(String.valueOf(texto.charAt(i))) < 0 || Integer.valueOf(String.valueOf(texto.charAt(i))) > 9){
+                                    formatoIncorrecto = true;
                                 }
                             } catch (Exception e4) {
                                 if(texto.charAt(i) != '#' && texto.charAt(i) != '*'){
                                     formatoIncorrecto = true;
-                                    JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números, almohadillas o asteriscos!",
-                                    "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
                                 }
                             }
                         }
@@ -266,6 +264,11 @@ public class FrameEjercicio2 extends JFrame implements ActionListener{
                 }
                 catch (IOException e3) {
                     System.err.println("Error de acceso al archivo de números");
+                }
+
+                if(formatoIncorrecto){ // Compruebo al final si el formato es incorrecto para que no salten muchos errores si hay muchas líneas mal
+                    JOptionPane.showMessageDialog(null, "Error! El archivo sólo debe de contener números, almohadillas o asteriscos!",
+                    "Error al leer el archivo", JOptionPane.ERROR_MESSAGE);
                 }
         
             }
